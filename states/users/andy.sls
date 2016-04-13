@@ -3,6 +3,12 @@
     - name: andy
     - shell: /bin/bash
 
+{{ sls }}~aliases:
+  file.managed:
+    - name: /home/andy/.aliases
+    - source: https://raw.githubusercontent.com/finalduty/configs/master/.aliases
+    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+
 {{ sls }}~authorized_keys:
   file.managed:
     - name: /home/andy/.ssh/authorized_keys

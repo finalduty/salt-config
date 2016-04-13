@@ -1,3 +1,9 @@
+{{ sls }}~aliases:
+  file.managed:
+    - name: /root/.aliases
+    - source: https://raw.githubusercontent.com/finalduty/configs/master/.aliases
+    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+
 {{ sls }}~bashrc:
   file.managed:
     - name: /root/.bashrc
