@@ -1,6 +1,6 @@
 {{ sls }}:
   user.present:
-    - name: root
+    - name: andy
     - shell: /bin/bash
 
 {{ sls }}~authorized_keys:
@@ -15,12 +15,12 @@
 
 {{ sls }}~bashrc:
   file.managed:
-    - name: /root/.bashrc
+    - name: /home/andy/.bashrc
     - source: https://raw.githubusercontent.com/finalduty/configs/master/.bashrc
     - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
 
 {{ sls }}~vimrc:
   file.managed:
-    - name: /root/.vimrc
+    - name: /home/andy/.vimrc
     - source: https://raw.githubusercontent.com/finalduty/configs/master/.vimrc
     - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
