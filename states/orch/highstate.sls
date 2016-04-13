@@ -1,4 +1,4 @@
 {{ sls }}:
   salt.state:
-    - tgt: 'web'
+    - tgt: '*'
     - highstate: True
