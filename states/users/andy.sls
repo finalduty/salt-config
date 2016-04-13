@@ -21,6 +21,6 @@
 
 {{ sls }}~vimrc:
   file.managed:
-    - name: /home/andy/.vimrc
+    - name: /home/andy/.vim/vimrc
     - source: https://raw.githubusercontent.com/finalduty/configs/master/.vimrc
     - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
