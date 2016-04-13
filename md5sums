@@ -1,0 +1,4 @@
+d41d8cd98f00b204e9800998ecf8427e  ./md5sums
+c902a15ff2fdf7431368dc33ee255366  ./states/orch/highstate.sls
+bc939dfb62dd2f8860beb77ce7302a79  ./states/top.sls
+36800fc40daccd26db134a161216a754  ./states/configs.sls
