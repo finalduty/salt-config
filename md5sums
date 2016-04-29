@@ -3,6 +3,6 @@ c33476d87708ffcf6938f64f0f157415  ./mksums.sh
 a7bfff9a7ba155dd662dc66525b94d6f  ./states/users/andy.sls
 75b97f2ff37c1684d84688004888e9ba  ./states/users/init.sls
 75b97f2ff37c1684d84688004888e9ba  ./states/pkgs/init.sls
-9252c9315736cdc623cceabb701c7964  ./states/pkgs/base.sls
+cdb1b4fcee64141118db8a35fec5fc9a  ./states/pkgs/base.sls
 021007df4677a5cb73b218c516ec36dd  ./states/orch/highstate.sls
 3df8a93eff52f53dd96a3bc573da0af2  ./states/top.sls
