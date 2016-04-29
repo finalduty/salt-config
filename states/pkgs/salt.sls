@@ -5,7 +5,7 @@
 {{ sls }}~minion:
   service.running:
     - name: salt-minion
-    - enabled: True
+    - enable: True
     - reload: True
     - watch:
       - pkg: salt-zmq
