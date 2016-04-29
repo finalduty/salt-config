@@ -1,7 +1,7 @@
 {{ sls }}:
   pkg.installed:
     - pkgs:
-      - vim-enhanced
+      - vim
       - salt-zmq
       - sudo
       - bash-completion
