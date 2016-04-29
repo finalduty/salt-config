@@ -20,7 +20,7 @@
     - group: andy
     - mode: 600
 
-{{ sls }}~sudoers
+{{ sls }}~sudoers:
   file.managed:
     - name: /etc/sudoers.d/andy
     - contents:
