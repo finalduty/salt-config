@@ -9,6 +9,4 @@
     - reload: True
     - watch:
       - pkg: salt-zmq
-      - file: /etc/salt/minion
-
 
