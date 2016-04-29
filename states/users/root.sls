@@ -10,6 +10,12 @@
     - source: https://raw.githubusercontent.com/finalduty/configs/master/.bashrc
     - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
 
+{{ sls }}~toprc:
+  file.managed:
+    - name: /root/.toprc
+    - source: https://raw.githubusercontent.com/finalduty/configs/master/.toprc
+    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+
 {{ sls }}~vimrc:
   file.managed:
     - name: /root/.vim/vimrc

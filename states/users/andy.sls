@@ -26,6 +26,12 @@
     - source: https://raw.githubusercontent.com/finalduty/configs/master/.bashrc
     - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
 
+{{ sls }}~toprc:
+  file.managed:
+    - name: /home/andy/.toprc
+    - source: https://raw.githubusercontent.com/finalduty/configs/master/.toprc
+    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+
 {{ sls }}~vimrc:
   file.managed:
     - name: /home/andy/.vim/vimrc
