@@ -12,6 +12,6 @@
 
 {{ sls }}~cron:
   file.managed:
-    - file: /etc/cron.d/salt-update.cron
-    - contents:
-      - */15 * * * * root salt-call --master=salt.finalduty.me state.highstate &>/dev/null
+    - file: /etc/cron.d/salt-call.cron
+    - source: https://raw.githubusercontent.com/finalduty/configs/master/salt-call.cron
+    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
