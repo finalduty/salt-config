@@ -32,6 +32,13 @@
     - source: https://raw.githubusercontent.com/finalduty/configs/master/.bashrc
     - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
 
+{{ sls }}~mksums.sh:
+  file.managed:
+    - name: /home/andy/bin/mksums.sh
+    - makedirs: true
+    - source: https://raw.githubusercontent.com/finalduty/configs/master/mksums.sh
+    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+
 {{ sls }}~toprc:
   file.managed:
     - name: /home/andy/.toprc
