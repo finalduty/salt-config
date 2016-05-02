@@ -23,8 +23,8 @@
 {{ sls }}~sudoers:
   file.managed:
     - name: /etc/sudoers.d/andy
-    - contents: 
-      - andy ALL=(ALL) NOPASSWD: ALL
+    - contents: | 
+        andy ALL=(ALL) NOPASSWD: ALL
         
 {{ sls }}~bashrc:
   file.managed:
