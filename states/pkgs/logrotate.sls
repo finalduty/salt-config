@@ -1,6 +1,6 @@
 {{ sls }}:
   - pkg.installed:
-  	- name: logrotate
+    - name: logrotate
 
 {{ sls }}~config:
   - file.managed:
