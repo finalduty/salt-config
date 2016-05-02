@@ -1,9 +1,9 @@
 {{ sls }}:
-  - pkg.installed:
+  pkg.installed:
     - name: logrotate
 
 {{ sls }}~config:
-  - file.managed:
+  file.managed:
     - name: /etc/logrotate.conf
     - mode: 644
     - source: https://raw.githubusercontent.com/finalduty/configs/master/logrotate.conf
