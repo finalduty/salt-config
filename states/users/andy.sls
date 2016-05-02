@@ -41,6 +41,15 @@
     - group: andy
     - mode: 640
 
+{{ sls }}~gitconfig:
+  file.managed:
+    - name: /home/andy/.gitconfig
+    - source: https://raw.githubusercontent.com/finalduty/configs/master/.gitconfig
+    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - user: andy
+    - group: andy
+    - mode: 640
+
 {{ sls }}~mksums.sh:
   file.managed:
     - name: /home/andy/bin/mksums.sh
