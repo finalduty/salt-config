@@ -3,11 +3,23 @@
     - name: andy
     - shell: /bin/bash
 
+{{ sls }}~sudoers:
+  file.managed:
+    - name: /etc/sudoers.d/andy
+    - contents: | 
+        andy ALL=(ALL) NOPASSWD: ALL
+    - user: root
+    - group: root
+    - mode: 600
+        
 {{ sls }}~aliases:
   file.managed:
     - name: /home/andy/.aliases
     - source: https://raw.githubusercontent.com/finalduty/configs/master/.aliases
     - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - user: andy
+    - group: andy
+    - mode: 640
 
 {{ sls }}~authorized_keys:
   file.managed:
@@ -20,17 +32,14 @@
     - group: andy
     - mode: 600
 
-{{ sls }}~sudoers:
-  file.managed:
-    - name: /etc/sudoers.d/andy
-    - contents: | 
-        andy ALL=(ALL) NOPASSWD: ALL
-        
 {{ sls }}~bashrc:
   file.managed:
     - name: /home/andy/.bashrc
     - source: https://raw.githubusercontent.com/finalduty/configs/master/.bashrc
     - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - user: andy
+    - group: andy
+    - mode: 640
 
 {{ sls }}~mksums.sh:
   file.managed:
@@ -38,12 +47,18 @@
     - makedirs: true
     - source: https://raw.githubusercontent.com/finalduty/configs/master/mksums.sh
     - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - user: andy
+    - group: andy
+    - mode: 750
 
 {{ sls }}~toprc:
   file.managed:
     - name: /home/andy/.toprc
     - source: https://raw.githubusercontent.com/finalduty/configs/master/.toprc
     - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - user: andy
+    - group: andy
+    - mode: 640
 
 {{ sls }}~vimrc:
   file.managed:
@@ -51,3 +66,6 @@
     - makedirs: true
     - source: https://raw.githubusercontent.com/finalduty/configs/master/.vimrc
     - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - user: andy
+    - group: andy
+    - mode: 640
