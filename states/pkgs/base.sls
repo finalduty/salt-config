@@ -2,7 +2,7 @@
   pkg.installed:
     - pkgs:
       - bash-completion
-      - dnsutils
+      - bind-tools
       - rsync
       - screen
       - sudo
