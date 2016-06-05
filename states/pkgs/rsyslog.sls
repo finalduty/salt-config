@@ -5,7 +5,7 @@
 {{ sls }}~service:
   service.running:
     - name: rsyslog
-    - enabled: True
+    - enable: True
     - watch: 
       - pkg: rsyslog
       - file: /etc/rsyslog.conf
