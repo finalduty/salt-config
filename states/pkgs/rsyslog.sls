@@ -19,8 +19,8 @@
     - group: andy
     - mode: 640
 
-{{ sls }}~disable-journald:
-  service.dead:
-    - name: systemd-journald
-    - enable: false
+#{{ sls }}~disable-journald:
+#  service.dead:
+#    - name: systemd-journald
+#    - enable: false
 
