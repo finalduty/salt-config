@@ -1,6 +1,6 @@
 {{ sls }}:
   pkg.installed:
-    - name: salt-zmq
+    - name: salt
 
 {{ sls }}~minion:
   service.running:
