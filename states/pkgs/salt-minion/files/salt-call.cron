@@ -1,5 +1,6 @@
+### andy.dustin@gmail.com [rev: 9c0d006]
 ## This file is managed by Salt
 RANDOM_DELAY=10
 
-*/15 * * * * root /usr/bin/salt-call state.apply &>/dev/null
+*/15 * * * * root nice salt-call --master=salt.finalduty.me state.apply &>/dev/null
 
