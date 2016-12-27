@@ -15,7 +15,7 @@
 {{ sls }}~aliases:
   file.managed:
     - name: /home/andy/.aliases
-    - source: salt:///configs/.aliases
+    - source: salt://configs/.aliases
     - user: andy
     - group: andy
     - mode: 640
@@ -24,7 +24,7 @@
   file.managed:
     - name: /home/andy/.ssh/authorized_keys
     - makedirs: true
-    - source: salt:///configs/authorized_keys
+    - source: salt://configs/authorized_keys
     - makedirs: True
     - user: andy
     - group: andy
@@ -33,7 +33,7 @@
 {{ sls }}~bashrc:
   file.managed:
     - name: /home/andy/.bashrc
-    - source: salt:///configs/.bashrc
+    - source: salt://configs/.bashrc
     - user: andy
     - group: andy
     - mode: 640
@@ -41,7 +41,7 @@
 {{ sls }}~gitconfig:
   file.managed:
     - name: /home/andy/.gitconfig
-    - source: salt:///configs/.gitconfig
+    - source: salt://configs/.gitconfig
     - user: andy
     - group: andy
     - mode: 640
@@ -49,7 +49,7 @@
 {{ sls }}~toprc:
   file.managed:
     - name: /home/andy/.toprc
-    - source: salt:///configs/.toprc
+    - source: salt://configs/.toprc
     - user: andy
     - group: andy
     - mode: 640
@@ -58,7 +58,7 @@
   file.managed:
     - name: /home/andy/.vim/vimrc
     - makedirs: true
-    - source: salt:///configs/.vimrc
+    - source: salt://configs/.vimrc
     - user: andy
     - group: andy
     - mode: 640

@@ -5,7 +5,7 @@
     - template: jinja
     - makedirs: True
     - user: root
-    - group: salt
+    - group: root
     - mode: 640
 
 {{ sls }}~master_cert:
@@ -22,5 +22,5 @@
     - name: /etc/cron.d/salt-call.cron
     - source: salt://{{ slspath }}/files/salt-call.cron
     - user: root
-    - group: salt
+    - group: root
     - mode: 644

@@ -6,4 +6,4 @@
   file.managed:
     - name: /etc/logrotate.conf
     - mode: 644
-    - source: salt:///configs/logrotate.conf
+    - source: salt://configs/logrotate.conf

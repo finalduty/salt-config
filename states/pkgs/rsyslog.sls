@@ -13,7 +13,7 @@
 {{ sls }}~config:
   file.managed:
     - name: /etc/rsyslog.conf
-    - source: salt:///configs/rsyslog.conf
+    - source: salt://configs/rsyslog.conf
     - user: root
     - group: root
     - mode: 640

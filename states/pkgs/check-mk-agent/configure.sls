@@ -1,7 +1,7 @@
 {{ sls }}:
   file.managed:
     - name: /usr/lib/systemd/system/check_mk_agent@.service
-    - source: salt:///{{ slspath }}/files/check_mk@.service
+    - source: salt://{{ slspath }}/files/check_mk@.service
     - user: root
     - group: root
     - mode: 644
@@ -9,7 +9,7 @@
 {{ sls }}~socket:
   file.managed:
     - name: /usr/lib/systemd/system/check_mk_agent.socket
-    - source: salt:///{{ slspath }}/files/check_mk.socket
+    - source: salt://{{ slspath }}/files/check_mk.socket
     - user: root
     - group: root
     - mode: 644
