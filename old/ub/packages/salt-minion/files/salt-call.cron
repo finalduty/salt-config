@@ -1,0 +1,5 @@
+## This file is managed by Salt
+RANDOM_DELAY=10
+
+*/15 * * * * root /usr/bin/salt-call state.apply &>/dev/null
+

@@ -15,8 +15,7 @@
 {{ sls }}~aliases:
   file.managed:
     - name: /home/andy/.aliases
-    - source: https://raw.githubusercontent.com/finalduty/configs/master/.aliases
-    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - source: salt:///configs/.aliases
     - user: andy
     - group: andy
     - mode: 640
@@ -25,8 +24,7 @@
   file.managed:
     - name: /home/andy/.ssh/authorized_keys
     - makedirs: true
-    - source: https://raw.githubusercontent.com/finalduty/configs/master/authorized_keys
-    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - source: salt:///configs/authorized_keys
     - makedirs: True
     - user: andy
     - group: andy
@@ -35,8 +33,7 @@
 {{ sls }}~bashrc:
   file.managed:
     - name: /home/andy/.bashrc
-    - source: https://raw.githubusercontent.com/finalduty/configs/master/.bashrc
-    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - source: salt:///configs/.bashrc
     - user: andy
     - group: andy
     - mode: 640
@@ -44,27 +41,15 @@
 {{ sls }}~gitconfig:
   file.managed:
     - name: /home/andy/.gitconfig
-    - source: https://raw.githubusercontent.com/finalduty/configs/master/.gitconfig
-    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - source: salt:///configs/.gitconfig
     - user: andy
     - group: andy
     - mode: 640
 
-{{ sls }}~mksums.sh:
-  file.managed:
-    - name: /home/andy/bin/mksums.sh
-    - makedirs: true
-    - source: https://raw.githubusercontent.com/finalduty/configs/master/mksums.sh
-    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
-    - user: andy
-    - group: andy
-    - mode: 750
-
 {{ sls }}~toprc:
   file.managed:
     - name: /home/andy/.toprc
-    - source: https://raw.githubusercontent.com/finalduty/configs/master/.toprc
-    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - source: salt:///configs/.toprc
     - user: andy
     - group: andy
     - mode: 640
@@ -73,8 +58,7 @@
   file.managed:
     - name: /home/andy/.vim/vimrc
     - makedirs: true
-    - source: https://raw.githubusercontent.com/finalduty/configs/master/.vimrc
-    - source_hash: https://raw.githubusercontent.com/finalduty/configs/master/md5sums
+    - source: salt:///configs/.vimrc
     - user: andy
     - group: andy
     - mode: 640

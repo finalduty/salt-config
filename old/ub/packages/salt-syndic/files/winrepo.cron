@@ -1,0 +1,6 @@
+## This file is managed by Salt ##
+#!/bin/bash
+
+salt-run winrepo.update_git_repos
+rm -rf /srv/salt/win/repo
+salt -G 'os:windows' pkg.refresh_db

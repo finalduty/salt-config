@@ -1,0 +1,65 @@
+## This file is managed by Salt ##
+## https://docs.saltstack.com/en/latest/ref/configuration/minion.html
+## https://docs.saltstack.com/en/latest/ref/configuration/examples.html#example-minion-configuration-file
+
+state_output: changes
+state_verbose: false
+startup_states: highstate
+backup_mode: minion
+hash_type: sha256
+log_level: {{ pillar['log-level'] }}
+log_level_logfile: info
+disable_modules: 
+  - zenoss
+
+{%- if pillar['salt-role'] == 'master' or pillar['salt-role'] == 'slave' %}
+master: 
+  - akl-{{ pillar['salt-platform'] }}-m01.ublr.net
+  - chc-{{ pillar['salt-platform'] }}-m02.ublr.net
+
+{%- elif pillar['salt-role'] == 'minion' %} 
+master_type: failover
+master_failback: True
+master_failback_interval: 300
+master_alive_interval: 90
+retry_dns: 0
+
+  {% if pillar['location'] == None or pillar['location'] == 'unknown' %}
+master: 
+  - akl-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - chc-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - syd-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - syd-{{ pillar['salt-platform'] }}-s01.ublr.net
+  - chc-{{ pillar['salt-platform'] }}-s01.ublr.net
+  - akl-{{ pillar['salt-platform'] }}-s01.ublr.net
+
+  {% elif pillar['location'] == 'akl' %}
+master: 
+  - akl-{{ pillar['salt-platform'] }}-s01.ublr.net
+  - akl-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - chc-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - chc-{{ pillar['salt-platform'] }}-s01.ublr.net
+  - syd-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - syd-{{ pillar['salt-platform'] }}-s01.ublr.net
+
+  {%- elif pillar['location'] == 'chc' %}
+master:
+  - chc-{{ pillar['salt-platform'] }}-s01.ublr.net
+  - chc-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - akl-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - akl-{{ pillar['salt-platform'] }}-s01.ublr.net
+  - syd-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - syd-{{ pillar['salt-platform'] }}-s01.ublr.net
+
+  {%- elif pillar['location'] == 'syd' %}
+master:
+  - syd-{{ pillar['salt-platform'] }}-s01.ublr.net
+  - syd-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - akl-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - chc-{{ pillar['salt-platform'] }}-s02.ublr.net
+  - akl-{{ pillar['salt-platform'] }}-s01.ublr.net
+  - chc-{{ pillar['salt-platform'] }}-s01.ublr.net
+  
+  {% endif -%}
+{% endif -%}
+

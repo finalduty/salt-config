@@ -1,0 +1,16 @@
+## This file is managed by Salt ##
+## https://docs.saltstack.com/en/latest/ref/configuration/minion.html
+## https://docs.saltstack.com/en/latest/ref/configuration/examples.html#example-minion-configuration-file
+
+state_output: changes
+state_verbose: false
+startup_states: highstate
+backup_mode: minion
+hash_type: sha256
+log_level: critical
+log_level_logfile: info
+disable_modules: 
+  - zenoss
+
+master: 
+  - salt.finalduty.me

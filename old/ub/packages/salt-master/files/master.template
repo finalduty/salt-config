@@ -1,0 +1,74 @@
+## This file is managed by Salt ##
+## https://docs.saltstack.com/en/latest/ref/configuration/master.html
+## https://docs.saltstack.com/en/latest/ref/configuration/examples.html#example-master-configuration-file
+
+master_id: {{ grains['id'] }}.ublr.net
+interface: 0.0.0.0
+publish_port: 4505
+ret_port: 4506
+user: root
+log_level: {{ pillar['log-level'] }}
+log_level_logfile: info
+
+top_file_merging_strategy: same
+hash_type: sha256
+ping_on_rotate: True
+cli_summary: True
+state_output: changes
+state_verbose: false
+state_events: True
+
+{%- if pillar['salt-role'] == 'slave' %}
+autoreject_file: /etc/salt/master.d/auto_reject
+syndic_master:
+  - akl-{{ pillar['salt-platform'] }}-m01.ublr.net
+  - chc-{{ pillar['salt-platform'] }}-m02.ublr.net
+{%- elif pillar['salt-role'] == 'master' %}
+order_masters: True
+{%- endif %}
+
+fileserver_backend:
+  - git
+
+file_roots:
+  base: /srv/salt/states
+
+## GitFS State File Backend
+gitfs_base: {{ pillar['salt-env'] }}
+gitfs_provider: pygit2
+gitfs_remotes:
+  - https://git.ublr.net/salt/linux.git:
+    - mountpoint: linux
+  - https://git.ublr.net/salt/windows.git:
+    - mountpoint: windows
+  - https://git.ublr.net/salt/base.git
+
+## GitFS Pillar Backend
+git_pillar_provider: pygit2
+git_pillar_base: {{ pillar['salt-env'] }}
+git_pillar_branch: {{ pillar['salt-env'] }}
+ext_pillar:
+  - git:
+    - https://git.ublr.net/salt/pillar.git
+{% if pillar['salt-role'] == 'master' %}
+rest_cherrypy:
+  port: 443
+  ssl_crt: /etc/pki/tls/certs/ublr.net.crt
+  ssl_key: /etc/pki/tls/keys/ublr.net.key
+
+external_auth:
+  pam:
+    api-user:
+      - "@runner"
+
+publisher_acl:
+{%- for user in pillar['salt-users'] %}
+  {{ user }}:
+  {%- if pillar['salt-users'][user]['role'] == 'admin' %}
+    - .*
+  {%- else %}
+    - state.apply
+    - test.ping
+  {%- endif %}
+{%- endfor %}
+{% endif %}
