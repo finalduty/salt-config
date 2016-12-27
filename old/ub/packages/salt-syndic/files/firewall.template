@@ -1,0 +1,158 @@
+### andy.dustin@umbrellar.com [rev: 9b2ee16]
+### This file is managed by SaltStack ###
+#!/bin/bash
+set -u
+
+### Set variables here to turn on or off rules ###
+
+## Feature restriction variables to [0,1,2] - (0 = off, 1 = MGMT & CUST ONLY, 2 = Public)
+CPANEL=0
+DNS=0
+FTP=0
+MAIL=0
+MYSQL=0
+PLESK=0
+WEB=0
+
+## IP restriction variables (Multiple IPs can be comma seperated)
+## These must be populated with at least one IP otherwise the script will break...
+SERVER_IP="0.0.0.0/0"
+MGMT_IPS="172.16.253.0/24,172.16.252.0/24"
+CLI_IPS="119.47.119.238,119.47.119.239"
+MONITOR_IPS="210.79.54.135,103.253.195.2,103.7.168.194"
+
+{% if pillar['salt-env'] == 'master' %}
+SALT_MASTERS='210.79.54.188,103.253.195.7'
+SALT_SLAVES='210.79.54.142,210.79.54.143,103.253.195.8,103.253.195.9,103.7.168.197,103.7.168.200'
+{% elif pillar['salt-env'] == 'uat' %}
+SALT_MASTERS="210.79.54.167,103.253.195.13"
+SALT_SLAVES="210.79.54.168,210.79.54.169,103.253.195.14,103.253.195.15,103.7.168.201,103.7.168.202"
+{% endif %}
+
+## ... except this one. This is fine to be left blank.
+CUST_IPS=""
+
+### Don't Edit Below This Line ###
+## Rule Aliases
+I="iptables -A INPUT"
+O="iptables -A OUTPUT"
+F="iptables -A FORWARD"
+M="iptables -A MGMT -s $MONITOR_IPS,$MGMT_IPS"
+C="iptables -A CUST -s $CUST_IPS"
+P="iptables -A PUBLIC"
+L='iptables -A ICMP'
+R='iptables -A PROTO'
+
+## Service restriction variables
+FAIL2BAN=`which fail2ban-client &>/dev/null; echo $?`
+
+## Reset active rules
+iptables -F
+iptables -X
+ip6tables -F
+ip6tables -X
+ip6tables -A INPUT -j REJECT
+ip6tables -A OUTPUT -j REJECT
+ip6tables -A FORWARD -j REJECT
+
+## Loopback rules
+$I -i lo -j ACCEPT
+$O -o lo -j ACCEPT
+
+## Create Subchains
+iptables -N PROTO 	&& $I -m state ! --state ESTABLISHED -j PROTO
+iptables -N ICMP 	&& $I -p icmp -j ICMP && $O -p icmp -j ICMP
+iptables -N MGMT 	&& $I ! -i lo -j MGMT
+[[ $CUST_IPS != '' ]] && iptables -N CUST && $I ! -i lo -j CUST
+[ $FAIL2BAN -eq 0 ] 	&& iptables -N FAIL2BAN && $I ! -i lo -j FAIL2BAN
+iptables -N PUBLIC 	&& $I ! -i lo -m state --state NEW -j PUBLIC
+
+## Protocol Filters
+$R -p tcp ! --syn -m state --state NEW -j DROP -m comment --comment "Drop SynFlood Packets"
+$R -m state --state INVALID -j REJECT
+$R -p tcp -j RETURN
+$R -p udp -j RETURN
+$R -p icmp -j RETURN
+$R -j DROP
+
+## ICMP Rules
+$L -p icmp --fragment -j DROP
+$L -p icmp --icmp-type echo-request -j ACCEPT
+$L -p icmp --icmp-type echo-reply -j ACCEPT
+$L -p icmp --icmp-type destination-unreachable -j ACCEPT
+$L -p icmp --icmp-type time-exceeded -j ACCEPT
+$L -p icmp -j REJECT
+
+## Management Services 
+iptables -A MGMT -d $SERVER_IP -s $CLI_IPS -p tcp --dport 22 -j ACCEPT
+$M -d $SERVER_IP -p tcp --dport 6556 -j ACCEPT
+[ $DNS -eq 1 ] 		&& $M,$CLI_IPS -p tcp --dport 53 -j ACCEPT 
+[ $DNS -eq 1 ] 		&& $M,$CLI_IPS -p udp --dport 53 -j ACCEPT
+[ $WEB -eq 1 ] 		&& $M,$CLI_IPS -p tcp -m multiport --dports 80,443 -j ACCEPT
+[ $FTP -eq 1 ] 		&& $M,$CLI_IPS -p tcp -m multiport --dports 21,9500:9550 -j ACCEPT
+[ $MAIL -eq 1 ] 	&& $M,$CLI_IPS -p tcp -m multiport --dports 25,465,110,143,993,995 -j ACCEPT
+[ $PLESK -eq 1 ] 	&& $M,$CLI_IPS -p tcp -m multiport --dports 8443,8447 -j ACCEPT
+[ $CPANEL -eq 1 ] 	&& $M,$CLI_IPS -p tcp -m multiport --dports 2083,2087 -j ACCEPT
+
+## Client Services
+if [[ $CUST_IPS != '' ]]; then
+  $C -d $SERVER_IP -p tcp --dport 22 -j ACCEPT
+  [ $DNS -eq 1 ] 	&& $C -p tcp --dport 53 -j ACCEPT
+  [ $DNS -eq 1 ] 	&& $C -p udp --dport 53 -j ACCEPT
+  [ $WEB -eq 1 ] 	&& $C -p tcp -m multiport --dports 80,443 -j ACCEPT
+  [ $FTP -eq 1 ] 	&& $C -p tcp -m multiport --dports 21,9500:9550 -j ACCEPT
+  [ $MAIL -eq 1 ] 	&& $C -p tcp -m multiport --dports 25,465,110,143,993,995 -j ACCEPT
+  [ $PLESK -eq 1 ] 	&& $C -p tcp --dport 8443 -j ACCEPT
+  [ $PLESK -ge 1 ]  && $C -p tcp --dport 8447 -j ACCEPT
+  [ $CPANEL -eq 1 ] && $C -p tcp -m multiport --dports 2083,2087 -j ACCEPT
+  [ $MYSQL -eq 1 ] 	&& $C -p tcp --dport 3306 -j ACCEPT
+fi
+
+## Public Services
+[ $DNS -eq 2 ] 		&& $P -p tcp --dport 53 -j ACCEPT
+[ $DNS -eq 2 ] 		&& $P -p udp --dport 53 -j ACCEPT
+[ $WEB -eq 2 ] 		&& $P -p tcp -m multiport --dports 80,443 -j ACCEPT
+[ $FTP -eq 2 ] 		&& $P -p tcp -m multiport --dports 21,9500:9550 -j ACCEPT
+[ $MAIL -eq 2 ] 	&& $P -p tcp -m multiport --dports 25,465,110,143,993,995 -j ACCEPT
+[ $PLESK -eq 2 ] 	&& $P -p tcp --dport 8443 -j ACCEPT
+[ $CPANEL -eq 2 ] 	&& $P -p tcp -m multiport --dports 2083,2087 -j ACCEPT
+[ $MYSQL -eq 2 ] 	&& $P -p tcp --dport 3306 -j ACCEPT
+
+{% if pillar['salt-role'] == 'master' %}
+$P -p tcp -s $SALT_MASTERS,$SALT_SLAVES -m multiport --dports 4505,4506 -j ACCEPT
+{% elif pillar['salt-role'] == 'slave' %}
+$P -p tcp -m multiport --dports 4505,4506 -j ACCEPT
+$P -p tcp -s $SALT_SLAVES -m multiport --dports 24007,24008,49152 -j ACCEPT -m comment --comment GlusterFS
+{% endif %}
+
+## Outbound Services
+for i in `awk '/nameserver/ {print $2}' /etc/resolv.conf`; do 
+  $O -d $i -p tcp --dport 53 -j ACCEPT
+  $O -d $i -p udp --dport 53 -j ACCEPT
+done
+for i in {1..3}; do 
+  $O -d ntp$i.ublr.net -p tcp --dport 123 -j ACCEPT
+done
+$O -d mirror.webhost.co.nz -p tcp -m multiport --dports 80,443 -j ACCEPT
+$O -d git.ublr.net -p tcp --dport 443 -j ACCEPT
+$O -d $SALT_MASTERS -p tcp -m multiport --dports 4505,4506 -j ACCEPT     # SaltStack
+
+## Allow Established Connections
+$I -m state --state ESTABLISHED -j ACCEPT
+iptables -I OUTPUT 3 -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+## Default Policies for Everything Else
+$I -j REJECT
+$O -j ACCEPT
+$F -j REJECT
+
+## Make Reboot Safe for CentOS
+if [ `grep -c 'Red Hat' /proc/version` -eq 1 ]; then
+  iptables-save > /etc/sysconfig/iptables
+  ip6tables-save > /etc/sysconfig/ip6tables
+fi
+
+## Restart services if they exist
+[ $FAIL2BAN -eq 0 ] && service fail2ban restart
+
+exit 0

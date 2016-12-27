@@ -1,0 +1,2 @@
+Defaults:%salt log_year, logfile=/var/log/sudo.log
+%salt ALL=NOPASSWD: /usr/bin/salt-key

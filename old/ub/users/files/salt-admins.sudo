@@ -1,0 +1,2 @@
+Defaults:%salt-admins log_year, logfile=/var/log/sudo.log
+%salt-admins ALL=(ALL) NOPASSWD: ALL
